@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" alignment="CENTER"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.newnomads.RegisterController">
+
+    <Label text="Register"/>
+    <TextField fx:id="imeField" promptText="Ime"/>
+    <TextField fx:id="emailField" promptText="Email"/>
+    <PasswordField fx:id="passwordField" promptText="Password"/>
+    <Button text="Register" onAction="#register"/>
+    <Button text="Login" onAction="#goToLogin"/>
+    <Label fx:id="message"/>
+</VBox>
