@@ -8,6 +8,7 @@ module com.example.newnomads {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires io.github.cdimascio.dotenv.java;
 
 
     opens com.example.newnomads to javafx.fxml;
