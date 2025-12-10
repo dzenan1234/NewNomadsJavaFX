@@ -25,6 +25,7 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -135,6 +136,11 @@
                             <jlinkImageName>app</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
+
+                            <options>
+                                <option>--add-reads</option>
+                                <option>com.example.newnomads=ALL-UNNAMED</option>
+                            </options>
                             <noHeaderFiles>true</noHeaderFiles>
                         </configuration>
                     </execution>

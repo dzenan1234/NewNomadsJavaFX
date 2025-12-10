@@ -11,6 +11,7 @@ module com.example.newnomads {
     requires io.github.cdimascio.dotenv.java;
 
 
+
     opens com.example.newnomads to javafx.fxml;
     exports com.example.newnomads;
 }
