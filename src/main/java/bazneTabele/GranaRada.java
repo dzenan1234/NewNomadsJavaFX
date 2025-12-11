@@ -1,4 +1,4 @@
-package com.example.newnomads;
+package bazneTabele;
 
 public class GranaRada {
     private int idGraneRada;

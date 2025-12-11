@@ -14,4 +14,6 @@ module com.example.newnomads {
 
     opens com.example.newnomads to javafx.fxml;
     exports com.example.newnomads;
+    exports bazneTabele;
+    opens bazneTabele to javafx.fxml;
 }

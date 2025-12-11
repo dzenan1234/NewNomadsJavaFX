@@ -11,7 +11,7 @@ public class DBTest {
             System.out.println("URL: " + conn.getMetaData().getURL());
             System.out.println("User: " + conn.getMetaData().getUserName());
             System.out.println("DB: " + conn.getCatalog());
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             System.out.println("❌ GREŠKA PRI KONEKCIJI:");
             e.printStackTrace();
         }

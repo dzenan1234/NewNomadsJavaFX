@@ -1,4 +1,4 @@
-package com.example.newnomads;
+package bazneTabele;
 
 public class Drzava {
     private int drzavaId;

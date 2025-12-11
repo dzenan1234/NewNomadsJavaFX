@@ -1,4 +1,4 @@
-package com.example.newnomads;
+package bazneTabele;
 
 import java.sql.Date;
 
