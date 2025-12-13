@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.newnomads.RegruterRadniciController">
+
+    <HBox spacing="10">
+        <ComboBox fx:id="comboDrzava" promptText="Filtriraj po državi"/>
+        <ComboBox fx:id="comboGrana" promptText="Filtriraj po grani rada"/>
+        <Button text="Filtriraj" onAction="#filterRadnici"/>
+    </HBox>
+
+    <TableView fx:id="radniciTable" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="imeCol" text="Ime"/>
+            <TableColumn fx:id="prezimeCol" text="Prezime"/>
+            <TableColumn fx:id="drzavaCol" text="Država"/>
+            <TableColumn fx:id="granaCol" text="Grana rada"/>
+        </columns>
+    </TableView>
+
+    <Button text="⬅ Nazad" onAction="#goBack"/>
+</VBox>

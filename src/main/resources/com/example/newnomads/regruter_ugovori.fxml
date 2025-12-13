@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21.0.6"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.newnomads.RegruterUgovoriController">
+
+    <!-- Center: tabela + dugme -->
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <TableView fx:id="ugovoriTable" prefHeight="400" prefWidth="600">
+                <columns>
+                    <TableColumn fx:id="radnikCol" text="Radnik" prefWidth="120"/>
+                    <TableColumn fx:id="firmaCol" text="Firma" prefWidth="120"/>
+                    <TableColumn fx:id="datumPocetkaCol" text="Datum početka" prefWidth="100"/>
+                    <TableColumn fx:id="datumKrajaCol" text="Datum kraja" prefWidth="100"/>
+                    <TableColumn fx:id="statusCol" text="Status" prefWidth="80"/>
+                </columns>
+            </TableView>
+
+            <Button text="⬅ Nazad" onAction="#goBack"/>
+        </VBox>
+
+    </center>
+
+</BorderPane>

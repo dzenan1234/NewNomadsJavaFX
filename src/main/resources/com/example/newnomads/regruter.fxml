@@ -2,13 +2,31 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="20" alignment="CENTER"
+<VBox spacing="15" alignment="CENTER"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.newnomads.RegruterController">
 
-    <Label text="Dobrodošli, Regruter!" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <Label text="Dobrodošli, Regruter!"
+           style="-fx-font-size: 22px; -fx-font-weight: bold;" />
 
-    <Button fx:id="logout" text="Logout" onAction="#logout"/>
+    <Button text="📋 Potražnje za radnicima"
+            onAction="#openPotraznje"
+            prefWidth="250"/>
+
+    <Button text="👷 Pregled radnika"
+            onAction="#openRadnici"
+            prefWidth="250"/>
+
+    <Button text="📄 Ugovori"
+            onAction="#openUgovori"
+            prefWidth="250"/>
+
+    <Separator prefWidth="250"/>
+
+    <Button fx:id="logout"
+            text="🚪 Logout"
+            onAction="#logout"
+            prefWidth="250"/>
 
 </VBox>
