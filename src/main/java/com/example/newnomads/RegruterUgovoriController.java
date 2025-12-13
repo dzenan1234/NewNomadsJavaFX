@@ -9,10 +9,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import bazneTabele.Ugovor;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 public class RegruterUgovoriController {
@@ -29,20 +32,22 @@ public class RegruterUgovoriController {
 
     @FXML
     private void initialize() {
+        // Postavljanje cellValueFactory za svaku kolonu
         radnikCol.setCellValueFactory(data -> data.getValue().radnikProperty());
         firmaCol.setCellValueFactory(data -> data.getValue().firmaProperty());
         datumPocetkaCol.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getDatumPocetka() != null ? data.getValue().getDatumPocetka().toString() : ""
+                        data.getValue().getDatumPocetkaRada() != null ? data.getValue().getDatumPocetkaRada().toString() : ""
                 )
         );
         datumKrajaCol.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getDatumKraja() != null ? data.getValue().getDatumKraja().toString() : ""
+                        data.getValue().getDatumKrajaRada() != null ? data.getValue().getDatumKrajaRada().toString() : ""
                 )
         );
-        statusCol.setCellValueFactory(data -> data.getValue().statusProperty());
+        statusCol.setCellValueFactory(data -> data.getValue().statusUgovoraProperty());
 
+        // Učitavanje podataka iz baze
         loadUgovori();
     }
 
@@ -50,35 +55,40 @@ public class RegruterUgovoriController {
     private void loadUgovori() {
         try (Connection conn = DB.getConnection()) {
 
-            String sql = "SELECT r.ime, r.prezime, f.imeFirme AS firma, d.nazivDrzave AS drzava, " +
-                    "u.datumPocetkaRada, u.datumKrajaRada, u.statusUgovora " +
+            String sql = "SELECT u.idUgovora, u.idFirme, u.idRadnika, u.datumPocetkaRada, u.datumKrajaRada, " +
+                    "u.statusUgovora, u.opis, r.ime, r.prezime, f.imeFirme, u.drzavaRadaId " +
                     "FROM ugovor u " +
                     "JOIN radnici r ON u.idRadnika = r.idRadnika " +
-                    "JOIN firmeKlijenti f ON u.idFirme = f.regruterId " +
-                    "JOIN drzave d ON u.drzavaRadaId = d.drzavaId";
-
-
+                    "JOIN firmeKlijenti f ON u.idFirme = f.regruterId";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
+
             ugovori.clear();
             while (rs.next()) {
                 String imePrezime = rs.getString("ime") + " " + rs.getString("prezime");
                 LocalDate datumPocetka = rs.getDate("datumPocetkaRada") != null ? rs.getDate("datumPocetkaRada").toLocalDate() : null;
                 LocalDate datumKraja = rs.getDate("datumKrajaRada") != null ? rs.getDate("datumKrajaRada").toLocalDate() : null;
 
+                Timestamp datumKreiranja = new Timestamp(System.currentTimeMillis());
+                Date sqlDatumPocetka = datumPocetka != null ? Date.valueOf(datumPocetka) : null;
+                Date sqlDatumKraja = datumKraja != null ? Date.valueOf(datumKraja) : null;
+
                 ugovori.add(new Ugovor(
                         rs.getInt("idUgovora"),
-                        rs.getInt("idRadnika"),
                         rs.getInt("idFirme"),
-                        imePrezime,
-                        rs.getString("firma"),
-                        datumPocetka,
-                        datumKraja,
+                        rs.getInt("idRadnika"),
+                        datumKreiranja,
+                        rs.getInt("drzavaRadaId"),
+                        sqlDatumPocetka,
+                        sqlDatumKraja,
                         rs.getString("statusUgovora"),
-                        rs.getString("opis")
+                        rs.getString("opis"),
+                        imePrezime,
+                        rs.getString("imeFirme")
                 ));
             }
+
             ugovoriTable.setItems(ugovori);
 
         } catch (Exception e) {
@@ -91,6 +101,17 @@ public class RegruterUgovoriController {
         try {
             Stage stage = (Stage) ugovoriTable.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/regruter.fxml"));
+            stage.setScene(new Scene(loader.load()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void logout() {
+        try {
+            Stage stage = (Stage) ugovoriTable.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/login.fxml"));
             stage.setScene(new Scene(loader.load()));
         } catch (Exception e) {
             e.printStackTrace();
