@@ -10,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import bazneTabele.Radnik;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,8 +29,10 @@ public class RegruterRadniciController {
     private void initialize() {
         imeCol.setCellValueFactory(data -> data.getValue().imeProperty());
         prezimeCol.setCellValueFactory(data -> data.getValue().prezimeProperty());
-        drzavaCol.setCellValueFactory(data -> data.getValue().drzavaProperty());
-        granaCol.setCellValueFactory(data -> data.getValue().granaProperty());
+
+        drzavaCol.setCellValueFactory(data -> data.getValue().drzavaIdProperty().asString());
+
+        granaCol.setCellValueFactory(data -> data.getValue().granaProperty().asString());
 
         loadCombos();
         loadRadnici();
@@ -87,12 +90,20 @@ public class RegruterRadniciController {
             radnici.clear();
             while (rs.next()) {
                 radnici.add(new Radnik(
-                        rs.getString("ime"),
-                        rs.getString("prezime"),
-                        rs.getString("drzava"),
-                        rs.getString("grana")
+                        0,                                      // idRadnika
+                        "",                                     // brojPasosa
+                        rs.getString("ime"),                     // ime
+                        rs.getString("prezime"),                 // prezime
+                        0,                                      // drzavaId
+                        0,                                      // granaId
+                        "",                                     // spol
+                        null,                                   // datumRodjenja
+                        null,                                   // doKadTrajePasos
+                        null,                                   // doKadTrajeViza
+                        ""                                      // status
                 ));
             }
+
             radniciTable.setItems(radnici);
         } catch (Exception e) { e.printStackTrace(); }
     }

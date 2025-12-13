@@ -1,7 +1,6 @@
 package servisi;
 
 import com.example.newnomads.DB;
-import bazneTabele.PotraznjaRadnika;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -11,9 +10,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import bazneTabele.PotraznjaRadnika;
 
 public class servisiPotraznjaRadnika {
-
 
     private static PotraznjaRadnika mapPotraznja(ResultSet rs) throws Exception {
         return new PotraznjaRadnika(
@@ -24,7 +23,9 @@ public class servisiPotraznjaRadnika {
                 rs.getDate("krajnjiRok"),
                 rs.getString("naslovPotraznje"),
                 rs.getString("opisPotraznje"),
-                rs.getString("statusPotraznje")
+                rs.getString("statusPotraznje"),
+                rs.getString("grana"),           // dodano
+                rs.getInt("brojRadnika")         // dodano
         );
     }
 

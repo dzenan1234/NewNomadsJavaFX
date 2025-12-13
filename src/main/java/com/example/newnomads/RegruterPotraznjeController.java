@@ -1,69 +1,119 @@
 package com.example.newnomads;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
+import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import bazneTabele.PotraznjaRadnika;
 
 public class RegruterPotraznjeController {
 
-    @FXML private TableView<Potraznja> potraznjeTable;
-    @FXML private TableColumn<Potraznja, Number> idCol;
-    @FXML private TableColumn<Potraznja, String> naslovCol;
-    @FXML private TableColumn<Potraznja, Number> firmaCol;
-    @FXML private TableColumn<Potraznja, String> statusCol;
+    @FXML
+    private TableView<PotraznjaRadnika> potraznjeTable;
 
-    private final ObservableList<Potraznja> potraznje = FXCollections.observableArrayList();
+    @FXML
+    private TableColumn<PotraznjaRadnika, Number> idCol;
+    @FXML
+    private TableColumn<PotraznjaRadnika, String> naslovCol;
+    @FXML
+    private TableColumn<PotraznjaRadnika, Number> firmaCol;
+    @FXML
+    private TableColumn<PotraznjaRadnika, String> statusCol;
+
+    private final ObservableList<PotraznjaRadnika> potraznje = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
-        idCol.setCellValueFactory(data -> data.getValue().idProperty());
-        naslovCol.setCellValueFactory(data -> data.getValue().naslovProperty());
-        firmaCol.setCellValueFactory(data -> data.getValue().firmaIdProperty());
-        statusCol.setCellValueFactory(data -> data.getValue().statusProperty());
+        idCol.setCellValueFactory(cellData -> cellData.getValue().idPotraznjeRadnikaProperty());
+        firmaCol.setCellValueFactory(cellData -> cellData.getValue().idFirmeProperty());
+        naslovCol.setCellValueFactory(cellData -> cellData.getValue().naslovPotraznjeProperty());
+        statusCol.setCellValueFactory(cellData -> cellData.getValue().statusPotraznjeProperty());
 
-        loadPotraznje(); // automatski ucitaj na start
+        potraznjeTable.setItems(potraznje);
+        loadPotraznje();
     }
 
     @FXML
+    private void loadPotraznje() {
+        try (Connection conn = DB.getConnection()) {
+            String sql = "SELECT idPotraznjeRadnika, naslovPotraznje, idFirme, statusPotraznje FROM potraznjaRadnika";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            potraznje.clear();
+            while (rs.next()) {
+                PotraznjaRadnika p = new PotraznjaRadnika(
+                        rs.getInt("idPotraznjeRadnika"),
+                        null,
+                        0,
+                        rs.getInt("idFirme"),
+                        null,
+                        rs.getString("naslovPotraznje"),
+                        "",
+                        rs.getString("statusPotraznje"),
+                        "",
+                        0
+                );
+                potraznje.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Nazad na dashboard
+    @FXML
     private void goBack() {
         try {
-            Stage stage = (Stage) potraznjeTable.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/regruter.fxml"));
+            Stage stage = (Stage) potraznjeTable.getScene().getWindow();
             stage.setScene(new Scene(loader.load()));
+            stage.setTitle("Regruter Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Opcionalno: ako želiš direktno otvoriti druge prozore iz potražnji
+    @FXML
+    private void openRadnici() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/regruter_radnici.fxml"));
+            Stage stage = (Stage) potraznjeTable.getScene().getWindow();
+            stage.setScene(new Scene(loader.load()));
+            stage.setTitle("Pregled radnika");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    private void loadPotraznje() {
-        try (Connection conn = DB.getConnection()) {
-            String sql = "SELECT idPotraznjeRadnika AS id, naslovPotraznje AS naslov, idFirme AS firmaId, statusPotraznje AS status FROM potraznjaRadnika";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
+    private void openUgovori() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/regruter_ugovori.fxml"));
+            Stage stage = (Stage) potraznjeTable.getScene().getWindow();
+            stage.setScene(new Scene(loader.load()));
+            stage.setTitle("Ugovori");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            potraznje.clear();
-            while (rs.next()) {
-                potraznje.add(new Potraznja(
-                        rs.getInt("id"),             // id
-                        null,                        // grana
-                        null,                        // brojRadnika
-                        rs.getString("status"),      // status
-                        rs.getString("naslov"),      // naslov
-                        rs.getInt("firmaId")         // firmaId
-                ));
-            }
-
-            potraznjeTable.setItems(potraznje);
+    @FXML
+    private void logout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/login.fxml"));
+            Stage stage = (Stage) potraznjeTable.getScene().getWindow();
+            stage.setScene(new Scene(loader.load()));
+            stage.setTitle("Login");
         } catch (Exception e) {
             e.printStackTrace();
         }

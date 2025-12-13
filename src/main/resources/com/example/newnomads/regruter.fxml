@@ -28,5 +28,4 @@
             text="🚪 Logout"
             onAction="#logout"
             prefWidth="250"/>
-
 </VBox>

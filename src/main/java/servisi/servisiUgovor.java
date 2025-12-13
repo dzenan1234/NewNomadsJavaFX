@@ -24,9 +24,12 @@ public class servisiUgovor {
                 rs.getDate("datumPocetkaRada"),
                 rs.getDate("datumKrajaRada"),
                 rs.getString("statusUgovora"),
-                rs.getString("opis")
+                rs.getString("opis"),
+                rs.getString("imeRadnika") + " " + rs.getString("prezimeRadnika"), // radnik
+                rs.getString("imeFirme")                                         // firma
         );
     }
+
 
 
     public static Task<Boolean> kreirajUgovorAsync(

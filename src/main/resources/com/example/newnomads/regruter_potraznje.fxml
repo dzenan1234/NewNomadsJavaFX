@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
 
-<VBox spacing="10" alignment="TOP_CENTER"
-      xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.newnomads.RegruterPotraznjeController"
-      prefWidth="600" prefHeight="400">
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.newnomads.RegruterPotraznjeController"
+            prefWidth="600" prefHeight="400">
 
-    <Label text="Potražnje za radnicima" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-
-    <TableView fx:id="potraznjeTable" prefHeight="300" prefWidth="580">
+    <TableView fx:id="potraznjeTable" layoutX="20" layoutY="20" prefWidth="560" prefHeight="300">
         <columns>
             <TableColumn fx:id="idCol" text="ID" prefWidth="50"/>
             <TableColumn fx:id="naslovCol" text="Naslov" prefWidth="200"/>
@@ -19,9 +16,6 @@
         </columns>
     </TableView>
 
-    <HBox spacing="10">
-        <Button text="Nazad" onAction="#goBack"/>
-        <Button text="Osveži" onAction="#loadPotraznje"/>
-    </HBox>
+    <Button text="Nazad" layoutX="20" layoutY="340" onAction="#goBack"/>
+</AnchorPane>
 
-</VBox>
