@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" alignment="TOP_CENTER"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.newnomads.RegruterPotraznjeController"
+      prefWidth="600" prefHeight="400">
+
+    <Label text="Potražnje za radnicima" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <TableView fx:id="potraznjeTable" prefHeight="300" prefWidth="580">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="naslovCol" text="Naslov" prefWidth="200"/>
+            <TableColumn fx:id="firmaCol" text="Firma" prefWidth="100"/>
+            <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Button text="Nazad" onAction="#goBack"/>
+        <Button text="Osveži" onAction="#loadPotraznje"/>
+    </HBox>
+
+</VBox>
