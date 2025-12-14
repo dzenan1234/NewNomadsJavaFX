@@ -11,7 +11,6 @@ public class RegisterController {
     @FXML private TextField imeField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
-    @FXML private ComboBox<String> roleBox;
     @FXML private Label message;
 
     @FXML private TextField brojTelefonaField;
@@ -20,16 +19,7 @@ public class RegisterController {
 
     @FXML
     private void initialize() {
-        roleBox.getItems().addAll("regruter", "firma");
-        roleBox.setValue("regruter"); // default
-
-        // Sakrij/Prikaži polja za firmu ovisno o roli
-        roleBox.setOnAction(e -> {
-            boolean isFirma = roleBox.getValue().equalsIgnoreCase("firma");
-            brojTelefonaField.setVisible(isFirma);
-            vlasnikFirmeField.setVisible(isFirma);
-            oFirmiField.setVisible(isFirma);
-        });
+        // Nema izbora role – uvijek firma
     }
 
     @FXML
@@ -37,30 +27,24 @@ public class RegisterController {
         String ime = imeField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
-        String role = roleBox.getValue();
 
-        if (ime.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            message.setText("Sva polja su obavezna!");
+        String brojTelefona = brojTelefonaField.getText();
+
+        if (ime.isEmpty() || email.isEmpty() || password.isEmpty() || brojTelefona.isEmpty()) {
+            message.setText("Sva obavezna polja moraju biti popunjena!");
             return;
         }
+
         if (!email.contains("@")) {
             message.setText("Email nije validan.");
             return;
         }
 
-        User user = new User(ime, email, password, role);
-
-        // Za firmu dodaj obavezna polja
-        if (role.equalsIgnoreCase("firma")) {
-            String brojTelefona = brojTelefonaField.getText();
-            if (brojTelefona.isEmpty()) {
-                message.setText("Broj telefona je obavezan za firmu!");
-                return;
-            }
-            user.setBrojTelefona(brojTelefona);
-            user.setVlasnikFirme(vlasnikFirmeField.getText());
-            user.setoFirmi(oFirmiField.getText());
-        }
+        // ROLE JE UVIJEK FIRMA
+        User user = new User(ime, email, password, "firma");
+        user.setBrojTelefona(brojTelefona);
+        user.setVlasnikFirme(vlasnikFirmeField.getText());
+        user.setoFirmi(oFirmiField.getText());
 
         if (UserDAO.registerUser(user)) {
             message.setText("Registracija uspješna! Prebacujem na login...");
