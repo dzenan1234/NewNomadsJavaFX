@@ -1,6 +1,7 @@
 package com.example.newnomads;
 
 import bazneTabele.Radnik;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +17,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
 public class RegruterRadniciController {
 
     @FXML private TableView<Radnik> radniciTable;
@@ -31,36 +31,30 @@ public class RegruterRadniciController {
         imeCol.setCellValueFactory(data -> data.getValue().imeProperty());
         prezimeCol.setCellValueFactory(data -> data.getValue().prezimeProperty());
 
-        drzavaCol.setCellValueFactory(data -> data.getValue().drzavaIdProperty().asString());
-
-        granaCol.setCellValueFactory(data -> data.getValue().granaProperty().asString());
+        // koristimo SimpleStringProperty za direktne stringove iz SQL-a
+        drzavaCol.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getStatus().split(" \\| ")[0])
+        );
+        granaCol.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getStatus().split(" \\| ")[1])
+        );
 
         loadCombos();
-        loadRadnici();
+        loadRadnici(null, null);
     }
 
     private void loadCombos() {
         try (Connection conn = DB.getConnection()) {
-            // Čišćenje i učitavanje država
             comboDrzava.getItems().clear();
             ResultSet rsDrz = conn.prepareStatement("SELECT nazivDrzave FROM drzave").executeQuery();
-            while (rsDrz.next()) {
-                comboDrzava.getItems().add(rsDrz.getString("nazivDrzave"));
-            }
+            while (rsDrz.next()) comboDrzava.getItems().add(rsDrz.getString("nazivDrzave"));
 
-
-            // Čišćenje i učitavanje grana rada
             comboGrana.getItems().clear();
             ResultSet rsGrana = conn.prepareStatement("SELECT nazivGraneRada FROM granaRada").executeQuery();
-            while (rsGrana.next()) {
-                comboGrana.getItems().add(rsGrana.getString("nazivGraneRada"));
-            }
+            while (rsGrana.next()) comboGrana.getItems().add(rsGrana.getString("nazivGraneRada"));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
-
 
     @FXML
     private void loadRadnici() {
@@ -74,38 +68,42 @@ public class RegruterRadniciController {
 
     private void loadRadnici(String drzavaFilter, String granaFilter) {
         try (Connection conn = DB.getConnection()) {
-            String sql = "SELECT r.ime, r.prezime, d.nazivDrzave AS drzava, g.nazivGraneRada AS grana\n" +
-                    "FROM radnici r\n" +
-                    "JOIN drzave d ON r.drzavaId = d.drzavaId\n" +
-                    "JOIN granaRada g ON r.idGraneRada = g.idGraneRada\n" +
-                    "WHERE (? IS NULL OR d.nazivDrzave = ?)\n" +
-                    "  AND (? IS NULL OR g.nazivGraneRada = ?)\n";
+            String sql = """
+                SELECT r.idRadnika, r.ime, r.prezime, d.nazivDrzave AS drzava, g.nazivGraneRada AS grana
+                FROM radnici r
+                JOIN drzave d ON r.drzavaId = d.drzavaId
+                JOIN granaRada g ON r.idGraneRada = g.idGraneRada
+                WHERE (? IS NULL OR d.nazivDrzave = ?)
+                  AND (? IS NULL OR g.nazivGraneRada = ?)
+                """;
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, drzavaFilter);
             stmt.setString(2, drzavaFilter);
             stmt.setString(3, granaFilter);
             stmt.setString(4, granaFilter);
+
             ResultSet rs = stmt.executeQuery();
 
             radnici.clear();
             while (rs.next()) {
-                radnici.add(new Radnik(
-                        0,                                      // idRadnika
-                        "",                                     // brojPasosa
-                        rs.getString("ime"),                     // ime
-                        rs.getString("prezime"),                 // prezime
-                        0,                                      // drzavaId
-                        0,                                      // granaId
-                        "",                                     // spol
-                        null,                                   // datumRodjenja
-                        null,                                   // doKadTrajePasos
-                        null,                                   // doKadTrajeViza
-                        ""                                      // status
-                ));
+                // Spremamo nazive države i grane u status property kao "drzava|grana"
+                Radnik r = new Radnik(
+                        rs.getInt("idRadnika"),
+                        "", // brojPasosa
+                        rs.getString("ime"),
+                        rs.getString("prezime"),
+                        0, // drzavaId
+                        0, // granaId
+                        "", // spol
+                        null, null, null,
+                        rs.getString("drzava") + " | " + rs.getString("grana") // status property
+                );
+                radnici.add(r);
             }
 
             radniciTable.setItems(radnici);
+
         } catch (Exception e) { e.printStackTrace(); }
     }
 
