@@ -10,6 +10,17 @@ public class FirmaController {
 
     @FXML
     private Button logout; // mora odgovarati fx:id u FXML
+    @FXML
+    private void openPotraznje() {
+        try {
+            Stage stage = (Stage) logout.getScene().getWindow(); // koristimo logout dugme samo da uzmemo stage
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/newnomads/firmaPotraznje.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setScene(scene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void logout() {
@@ -23,6 +34,8 @@ public class FirmaController {
 
             // Postavi login scenu
             stage.setScene(scene);
+            System.out.println("Logovana firma ID = " + Session.getIdFirme());
+
 
         } catch (Exception e) {
             e.printStackTrace();
