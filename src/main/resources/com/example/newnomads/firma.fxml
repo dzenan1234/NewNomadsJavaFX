@@ -9,6 +9,8 @@
 
     <Label text="Dobrodošli, Firma!" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-    <Button text="Logout" fx:id="logout" onAction="#logout"/>
+    <Button text="Moje potražnje" fx:id="potraznjeBtn" onAction="#openPotraznje" prefWidth="200"/>
+
+    <Button text="Logout" fx:id="logout" onAction="#logout" prefWidth="200"/>
 
 </VBox>

@@ -89,6 +89,9 @@ public class UserDAO {
                                 rs.getString("password"),
                                 role
                         );
+
+                        user.setIdFirme(rsFirma.getInt("idFirme"));
+
                         user.setBrojTelefona(rsFirma.getString("brojTelefona"));
                         user.setVlasnikFirme(rsFirma.getString("vlasnikFirme"));
                         user.setoFirmi(rsFirma.getString("oFirmi"));

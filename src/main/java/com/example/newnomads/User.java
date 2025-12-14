@@ -18,6 +18,16 @@ public class User {
         this.password = password;
         this.role = role;
     }
+    private int idFirme;
+
+    public int getIdFirme() {
+        return idFirme;
+    }
+
+    public void setIdFirme(int idFirme) {
+        this.idFirme = idFirme;
+    }
+
 
     // GETTERI I SETTERI
     public String getIme() {

@@ -25,10 +25,24 @@ public class LoginController {
         }
 
         User user = UserDAO.login(email, password);
-
         if (user != null) {
+
+            // postavi osnovne podatke
+            Session.setUser(
+                    0, // ako ne koristiš userId sad
+                    user.getRole(),
+                    user.getIme()
+            );
+
+            // ako je firma – pamti idFirme
+            if (user.getRole().equalsIgnoreCase("firma")) {
+                Session.setFirma(user.getIdFirme());
+            }
+
             openDashboard(user.getRole());
-        } else {
+        }
+
+        else {
             message.setText("Pogrešan email ili password!");
         }
     }

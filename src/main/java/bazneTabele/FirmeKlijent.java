@@ -2,7 +2,7 @@ package bazneTabele;
 
 public class FirmeKlijent {
 
-    private int regruterId;
+    private int idFirme;              // PRIMARY KEY
     private String imeFirme;
     private int idGraneRada;
     private String mail;
@@ -13,10 +13,18 @@ public class FirmeKlijent {
     private String drugiKontakt;
     private int drzavaId;
 
-    public FirmeKlijent(int regruterId, String imeFirme, int idGraneRada, String mail,
-                        String lozinka, String oFirmi, String vlasnikFirme,
-                        String brojTelefona, String drugiKontakt, int drzavaId) {
-        this.regruterId = regruterId;
+    public FirmeKlijent(int idFirme,
+                        String imeFirme,
+                        int idGraneRada,
+                        String mail,
+                        String lozinka,
+                        String oFirmi,
+                        String vlasnikFirme,
+                        String brojTelefona,
+                        String drugiKontakt,
+                        int drzavaId) {
+
+        this.idFirme = idFirme;
         this.imeFirme = imeFirme;
         this.idGraneRada = idGraneRada;
         this.mail = mail;
@@ -28,7 +36,8 @@ public class FirmeKlijent {
         this.drzavaId = drzavaId;
     }
 
-    public int getRegruterId() { return regruterId; }
+    // GETTERI
+    public int getIdFirme() { return idFirme; }
     public String getImeFirme() { return imeFirme; }
     public int getIdGraneRada() { return idGraneRada; }
     public String getMail() { return mail; }
@@ -39,8 +48,9 @@ public class FirmeKlijent {
     public String getDrugiKontakt() { return drugiKontakt; }
     public int getDrzavaId() { return drzavaId; }
 
-    public void setLozinka(String lozinka) { this.lozinka = lozinka; }
+    // SETTERI
     public void setImeFirme(String imeFirme) { this.imeFirme = imeFirme; }
+    public void setLozinka(String lozinka) { this.lozinka = lozinka; }
     public void setOFirmi(String oFirmi) { this.oFirmi = oFirmi; }
     public void setVlasnikFirme(String vlasnikFirme) { this.vlasnikFirme = vlasnikFirme; }
     public void setBrojTelefona(String brojTelefona) { this.brojTelefona = brojTelefona; }

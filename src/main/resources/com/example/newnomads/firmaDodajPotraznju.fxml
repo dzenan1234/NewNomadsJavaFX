@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" alignment="CENTER"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.newnomads.FirmaDodajPotraznjuController">
+
+    <Label text="Dodaj potražnju" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="naslovField" promptText="Naslov potražnje" prefWidth="300"/>
+    <TextArea fx:id="opisField" promptText="Opis potražnje" prefWidth="300" prefHeight="100"/>
+    <DatePicker fx:id="rokPicker" promptText="Krajnji rok" prefWidth="300"/>
+
+    <!-- Bez <String> -->
+    <ComboBox fx:id="granaCombo" prefWidth="300"/>
+
+    <TextField fx:id="brojRadnikaField" promptText="Broj radnika" prefWidth="300"/>
+
+    <Button text="Objavi potražnju" onAction="#objaviPotraznju" prefWidth="200"/>
+</VBox>
