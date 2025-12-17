@@ -78,6 +78,7 @@ public class LoginController {
             }
 
             Scene scene = new Scene(fxmlLoader.load());
+            stage.setFullScreen(true);
             stage.setScene(scene);
 
         } catch (Exception e) {
@@ -93,7 +94,9 @@ public class LoginController {
                 getClass().getResource("/com/example/newnomads/register.fxml")
         );
         Scene scene = new Scene(fxmlLoader.load());
+
         stage.setScene(scene);
+        stage.setFullScreen(true);
     }
 
     @FXML
@@ -102,7 +105,5 @@ public class LoginController {
     public void initialize() {
         loginImage.setImage(new Image(getClass().getResource("/images/Logo.png").toExternalForm()));
     }
-
-
 
 }

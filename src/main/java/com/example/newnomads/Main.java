@@ -18,14 +18,16 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
-        // Pokretanje login prozora
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/newnomads/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         stage.setTitle("NewNomads Login");
-        stage.setScene(scene);
 
         stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
+        stage.setMaximized(true);
+        stage.setScene(scene);
+
 
         stage.show();
     }
