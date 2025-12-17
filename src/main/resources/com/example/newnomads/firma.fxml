@@ -2,10 +2,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import java.lang.String?>
 <VBox spacing="20" alignment="CENTER"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.newnomads.FirmaController">
+      fx:controller="com.example.newnomads.FirmaController"
+      >
+
 
     <Label text="Dobrodošli, Firma!" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
