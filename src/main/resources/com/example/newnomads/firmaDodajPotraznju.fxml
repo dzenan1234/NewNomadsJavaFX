@@ -6,19 +6,17 @@
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.newnomads.FirmaDodajPotraznjuController"
-      stylesheets="@../../../css/potraznja.css">
+      stylesheets="@../../../css/dodajpotraznju.css"
+      styleClass="vbox-form">  <!-- OVO JE DODANO -->
 
-    <Label text="Dodaj potražnju" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <Label text="Dodaj potražnju" styleClass="title-label"/>
 
-    <TextField fx:id="naslovField" promptText="Naslov potražnje" prefWidth="300"/>
-    <TextArea fx:id="opisField" promptText="Opis potražnje" prefWidth="300" prefHeight="100"/>
-    <DatePicker fx:id="rokPicker" promptText="Krajnji rok" prefWidth="300"/>
+    <TextField fx:id="naslovField" promptText="Naslov potražnje"/>
+    <TextArea fx:id="opisField" promptText="Opis potražnje"/>
+    <DatePicker fx:id="rokPicker" promptText="Krajnji rok"/>
+    <ComboBox fx:id="granaCombo"/>
+    <TextField fx:id="brojRadnikaField" promptText="Broj radnika"/>
 
-    <!-- Bez <String> -->
-    <ComboBox fx:id="granaCombo" prefWidth="300"/>
-
-    <TextField fx:id="brojRadnikaField" promptText="Broj radnika" prefWidth="300"/>
-
-    <Button text="Objavi potražnju" onAction="#objaviPotraznju" prefWidth="200"/>
+    <Button text="Objavi potražnju" onAction="#objaviPotraznju" styleClass="action-button"/>
 
 </VBox>
