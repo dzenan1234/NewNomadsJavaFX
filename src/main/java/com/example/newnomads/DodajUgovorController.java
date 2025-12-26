@@ -5,9 +5,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -34,10 +36,10 @@ public class DodajUgovorController {
         loadFirme();
         loadRadnici();
 
-        // Postavi listener za comboFirma da filtrira potražnje po firmi
+        // Listener za filtriranje potražnji čim se odabere firma
         comboFirma.setOnAction(event -> loadPotraznjeZaFirmu());
 
-        // Postavi današnji datum kao podrazumevani početak rada
+        // Današnji datum kao default
         datePocetak.setValue(LocalDate.now());
     }
 
@@ -55,7 +57,8 @@ public class DodajUgovorController {
     private void loadRadnici() {
         try (Connection conn = DB.getConnection()) {
             radniciList.clear();
-            ResultSet rs = conn.prepareStatement("SELECT idRadnika, ime, prezime FROM radnici").executeQuery();
+            // Učitavamo samo slobodne radnike da spriječimo duple ugovore
+            ResultSet rs = conn.prepareStatement("SELECT idRadnika, ime, prezime FROM radnici WHERE nazivStatusa = 'slobodan'").executeQuery();
             while (rs.next()) {
                 radniciList.add(rs.getInt("idRadnika") + " - " + rs.getString("ime") + " " + rs.getString("prezime"));
             }
@@ -63,14 +66,12 @@ public class DodajUgovorController {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // NOVO: učitava samo potražnje za odabranu firmu
     private void loadPotraznjeZaFirmu() {
         String selectedFirma = comboFirma.getValue();
         if (selectedFirma == null) {
             comboPotraznje.getItems().clear();
             return;
         }
-
         int idFirme = Integer.parseInt(selectedFirma.split(" - ")[0]);
 
         try (Connection conn = DB.getConnection()) {
@@ -86,34 +87,29 @@ public class DodajUgovorController {
                 potraznjeList.add(rs.getInt("idPotraznjeRadnika") + " - " +
                         rs.getString("naslovPotraznje") + " (" + rs.getInt("brojRadnika") + " preostalo)");
             }
-
             comboPotraznje.setItems(potraznjeList);
-
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     @FXML
     private void posaljiUgovor() {
+        if (comboFirma.getValue() == null || comboRadnik.getValue() == null ||
+                datePocetak.getValue() == null || comboPotraznje.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "Polja nedostaju", "Molimo popunite sva obavezna polja.");
+            return;
+        }
+
         try (Connection conn = DB.getConnection()) {
-
-            if (comboFirma.getValue() == null || comboRadnik.getValue() == null ||
-                    datePocetak.getValue() == null || comboPotraznje.getValue() == null) {
-                showAlert("Greška", "Popunite sva obavezna polja (Firma, Radnik, Potražnja, Datum početka)!");
-                return;
-            }
-
             int idFirme = Integer.parseInt(comboFirma.getValue().split(" - ")[0]);
             int idRadnika = Integer.parseInt(comboRadnik.getValue().split(" - ")[0]);
             int idPotraznje = Integer.parseInt(comboPotraznje.getValue().split(" - ")[0]);
             Date datumPocetka = Date.valueOf(datePocetak.getValue());
             Date datumKraja = dateKraj.getValue() != null ? Date.valueOf(dateKraj.getValue()) : null;
 
-            String status = "naCekanju";
-            String opis = textOpis.getText();
-
             String sql = """
-                INSERT INTO ugovor (idFirme, idRadnika, idPotraznjeRadnika, datumPocetkaRada, datumKrajaRada, statusUgovora, opis, drzavaRadaId, datumKreiranja) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                INSERT INTO ugovor (idFirme, idRadnika, idPotraznjeRadnika, datumPocetkaRada, datumKrajaRada, 
+                                   statusUgovora, opis, drzavaRadaId, datumKreiranja) 
+                VALUES (?, ?, ?, ?, ?, 'aktivan', ?, 1, CURRENT_TIMESTAMP)
             """;
 
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -122,28 +118,42 @@ public class DodajUgovorController {
             stmt.setInt(3, idPotraznje);
             stmt.setDate(4, datumPocetka);
             stmt.setDate(5, datumKraja);
-            stmt.setString(6, status);
-            stmt.setString(7, opis);
-            stmt.setInt(8, 1);
+            stmt.setString(6, textOpis.getText());
 
             int inserted = stmt.executeUpdate();
             if (inserted > 0) {
                 azurirajStatusRadnika(idRadnika, "zaposlen");
-                showAlert("Uspjeh", "Ugovor je uspješno kreiran!");
-                Stage stage = (Stage) btnPosalji.getScene().getWindow();
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/example/newnomads/regruter_ugovori.fxml")
-                );
-                Scene scene = new Scene(loader.load());
-                stage.setScene(scene);
-                StageUtils.setFullScreen(stage);
+                showAlert(Alert.AlertType.INFORMATION, "Uspjeh", "Ugovor je uspješno kreiran!");
+
+                // POVRATAK NA TABELU UNUTAR CONTENT PANE-a (BEZ UBIDJANJA SIDEBARA)
+                vratiNaUgovore();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Greška", "Greška pri upisu: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Greška", "Neuspješan upis u bazu.");
         }
     }
+
+    @FXML
+    private void odustani() {
+        vratiNaUgovore();
+    }
+
+    private void vratiNaUgovore() {
+        try {
+            // Pronalazimo contentPane iz trenutne scene (onaj koji je u BorderPane centru)
+            StackPane cp = (StackPane) btnPosalji.getScene().lookup("#contentPane");
+
+            if (cp != null) {
+                Parent root = FXMLLoader.load(getClass().getResource("/com/example/newnomads/regruter_ugovori.fxml"));
+                cp.getChildren().setAll(root);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setPodaci(Radnik radnik, int idFirme) {
         if (radnik != null) {
             String radnikString = radnik.getIdRadnika() + " - " + radnik.getIme() + " " + radnik.getPrezime();
@@ -155,13 +165,12 @@ public class DodajUgovorController {
             for (String f : comboFirma.getItems()) {
                 if (f.startsWith(idFirme + " -")) {
                     comboFirma.setValue(f);
-                    loadPotraznjeZaFirmu(); // odmah prikaz potražnji za firmu
+                    loadPotraznjeZaFirmu();
                     break;
                 }
             }
         }
     }
-
 
     private void azurirajStatusRadnika(int idRadnika, String noviStatus) {
         try (Connection conn = DB.getConnection()) {
@@ -170,17 +179,19 @@ public class DodajUgovorController {
             stmt.setString(1, noviStatus);
             stmt.setInt(2, idRadnika);
             stmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Status radnika nije ažuriran, ali je ugovor kreiran.");
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+
+        // VEŽEMO ALERT ZA GLAVNI PROZOR DA NE "BJEŽI" I NE KVARI FOKUS
+        Window owner = btnPosalji.getScene().getWindow();
+        alert.initOwner(owner);
+
         alert.showAndWait();
     }
 }

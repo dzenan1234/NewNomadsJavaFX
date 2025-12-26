@@ -30,7 +30,7 @@ public class FirmaController {
         }
 
         // Opcionalno: možeš odmah učitati default sadržaj
-         loadContent("/com/example/newnomads/firmaPotraznje.fxml");
+        loadContent("/com/example/newnomads/firmaPotraznje.fxml");
     }
 
     @FXML
@@ -54,6 +54,24 @@ public class FirmaController {
             controller.setIdFirme(Session.getIdFirme());
 
             // Zamijeni sadržaj centralnog panela
+            contentPane.getChildren().setAll(pane);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // DODAJ OVU METODU ZA NOVU POTRAŽNJU
+    @FXML
+    private void openNovaPotraznja() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/firmaDodajPotraznju.fxml"));
+            Pane pane = loader.load();
+
+            // Dobavi kontroler forme za dodavanje potražnje
+            FirmaDodajPotraznjuController controller = loader.getController();
+            // Ne treba ti referenca na parent controller jer ćeš se vratiti na listu potražnji
+
+            // Zamijeni sadržaj
             contentPane.getChildren().setAll(pane);
         } catch (Exception e) {
             e.printStackTrace();
