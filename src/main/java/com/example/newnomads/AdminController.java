@@ -3,6 +3,7 @@ package com.example.newnomads;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane;
@@ -198,33 +199,42 @@ public class AdminController {
         // Prikaži default tabelu radnika
         showRadnici();
     }
-
-
-
-    // ------------------ LOAD TABLE ------------------
     private void loadTable(String sql) {
         try (Connection c = DB.getConnection();
              Statement s = c.createStatement();
              ResultSet rs = s.executeQuery(sql)) {
 
+            // 1. ISKLJUČI policy privremeno da ne pravi buku dok brišemo
+            table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
             table.getColumns().clear();
             table.getItems().clear();
 
-            int cols = rs.getMetaData().getColumnCount();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int cols = metaData.getColumnCount();
 
             for (int i = 1; i <= cols; i++) {
                 final int colIndex = i;
-                TableColumn<ObservableList<String>, String> col =
-                        new TableColumn<>(rs.getMetaData().getColumnName(i));
+                String columnName = metaData.getColumnName(i);
 
-                col.setCellValueFactory(data ->
-                        new ReadOnlyStringWrapper(data.getValue().get(colIndex - 1)));
+                TableColumn<ObservableList<String>, String> col = new TableColumn<>(formatHeader(columnName));
+                col.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().get(colIndex - 1)));
+
+                // --- PROPORCIONALNE ŠIRINE ---
+                String nameLower = columnName.toLowerCase();
+                if (nameLower.contains("id")) {
+                    col.setMaxWidth(100);
+                    col.setPrefWidth(80);
+                } else if (nameLower.contains("ime") || nameLower.contains("mail") || nameLower.contains("prezime")) {
+                    col.setPrefWidth(400); // Dajemo im puno prostora
+                } else {
+                    col.setPrefWidth(200);
+                }
 
                 table.getColumns().add(col);
             }
 
             ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-
             while (rs.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
                 for (int i = 1; i <= cols; i++) {
@@ -232,13 +242,25 @@ public class AdminController {
                 }
                 data.add(row);
             }
-
             table.setItems(data);
+
+            // 2. KLJUČNI DIO: Ponovo uključi CONSTRAINED policy nakon što je tabela puna
+            // Ovo forsira JavaFX da ponovo preračuna širine na osnovu PrefWidth koje smo dali
+            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    // Dodaj i ovu metodu da nazivi ne budu "idRadnika" nego "Id Radnika"
+    private String formatHeader(String text) {
+        if (text == null || text.isEmpty()) return "";
+        String result = text.replaceAll("(?<=[a-z])(?=[A-Z])", " ");
+        return result.substring(0, 1).toUpperCase() + result.substring(1);
+    }
+
+
+
 
     // ------------------ LOAD DRZAVE & GRANE ------------------
     private void loadDrzave() {
@@ -294,11 +316,27 @@ public class AdminController {
     @FXML
     void logout() {
         try {
+            // 1. Dohvati trenutni stage preko bilo kojeg UI elementa (npr. table)
             Stage stage = (Stage) table.getScene().getWindow();
-            stage.setScene(new Scene(
-                    FXMLLoader.load(getClass().getResource("/com/example/newnomads/login.fxml"))
-            ));
+
+            // 2. Učitaj Login FXML kao Parent (ne kao Scene!)
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/newnomads/login.fxml"));
+
+            // 3. Zamijeni samo sadržaj (root) trenutne scene
+            // Ovo sprečava Windows/macOS da "trzne" i resetuje veličinu prozora
+            stage.getScene().setRoot(root);
+
+            // 4. Ponovo forsiraj Full Screen
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint(""); // Da se ne vidi "Press ESC to exit" poruka
+
+            stage.setTitle("Login");
+
+            // Opcionalno: Ako imaš Session klasu, očisti je
+            // Session.clear();
+
         } catch (Exception e) {
+            System.err.println("Greška pri odjavi: " + e.getMessage());
             e.printStackTrace();
         }
     }

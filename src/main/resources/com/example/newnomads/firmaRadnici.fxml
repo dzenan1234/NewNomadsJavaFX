@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox spacing="10" alignment="CENTER"
+<VBox spacing="30" alignment="TOP_CENTER"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.newnomads.FirmaRadniciController"
       stylesheets="@../../../css/potraznja.css"
-      styleClass="root"
-      style="-fx-padding: 20;">
+      styleClass="root">
 
-    <Label text="Dostupni radnici" styleClass="title-label" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
 
-    <TableView fx:id="tableRadnici" prefWidth="1000" VBox.vgrow="ALWAYS" styleClass="custom-table">
+    <Label text="Dostupni radnici" styleClass="title-label"/>
+
+    <TableView fx:id="tableRadnici" styleClass="custom-table" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colIme" text="Ime" prefWidth="100"/>
-            <TableColumn fx:id="colPrezime" text="Prezime" prefWidth="100"/>
-            <TableColumn fx:id="colSpol" text="Spol" prefWidth="80"/>
-            <TableColumn fx:id="colDrzava" text="Država ID" prefWidth="80"/>
-            <TableColumn fx:id="colGrana" text="Grana rada" prefWidth="120"/>
-            <TableColumn fx:id="colPasos" text="Pasoš važi do" prefWidth="120"/>
-            <TableColumn fx:id="colViza" text="Viza važi do" prefWidth="120"/>
-
-            <TableColumn fx:id="colAkcija" text="Akcija" prefWidth="120"/>
+            <TableColumn fx:id="colIme" text="Ime"/>
+            <TableColumn fx:id="colPrezime" text="Prezime"/>
+            <TableColumn fx:id="colSpol" text="Spol"/>
+            <TableColumn fx:id="colDrzava" text="Država ID"/>
+            <TableColumn fx:id="colGrana" text="Grana rada"/>
+            <TableColumn fx:id="colPasos" text="Pasoš važi do"/>
+            <TableColumn fx:id="colViza" text="Viza važi do"/>
+            <TableColumn fx:id="colAkcija" text="Akcija"/>
         </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
     </TableView>
 
-    <Button text="⬅ Nazad" onAction="#goBack" styleClass="action-button"
-            style="-fx-padding: 10 20; -fx-cursor: hand;"/>
 </VBox>

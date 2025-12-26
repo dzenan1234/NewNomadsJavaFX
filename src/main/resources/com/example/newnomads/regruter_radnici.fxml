@@ -1,61 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox spacing="20"
+<VBox spacing="25" alignment="TOP_CENTER"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.newnomads.RegruterRadniciController"
-      stylesheets="@../../../css/potraznja.css"
-      styleClass="root">
+      stylesheets="@../../../css/potraznja.css">
 
-    <!-- Naslov -->
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
     <Label text="Dostupni radnici" styleClass="title-label"/>
 
-    <!-- Filter bar -->
-    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="filter-bar">
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-pane">
+        <padding>
+            <Insets top="15" right="20" bottom="15" left="20"/>
+        </padding>
 
-        <ComboBox fx:id="comboDrzava"
-                  promptText="Sve države"
-                  styleClass="filter-combo"/>
+        <ComboBox fx:id="comboDrzava" promptText="Sve države"
+                  prefWidth="180" prefHeight="40" styleClass="form-field"/>
 
-        <ComboBox fx:id="comboGrana"
-                  promptText="Sve grane rada"
-                  styleClass="filter-combo"/>
+        <ComboBox fx:id="comboGrana" promptText="Sve grane rada"
+                  prefWidth="180" prefHeight="40" styleClass="form-field"/>
 
-        <Button text="Filtriraj"
-                onAction="#filterRadnici"
-                styleClass="filter-button"/>
+        <Region HBox.hgrow="ALWAYS" />
 
-        <Button text="Resetuj"
-                onAction="#resetFilters"
-                styleClass="filter-button"/>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Filtriraj" onAction="#filterRadnici"
+                    prefHeight="40" prefWidth="110" styleClass="action-button"/>
 
-        <Button text="Export PDF"
-                onAction="#exportRadniciPdf"
-                styleClass="filter-button"/>
+            <Button text="Resetuj" onAction="#resetFilters"
+                    prefHeight="40" prefWidth="110" styleClass="action-button, secondary-button"/>
 
+            <Separator orientation="VERTICAL" prefHeight="30"/>
 
+            <Button text="Export PDF 📄" onAction="#exportRadniciPdf"
+                    prefHeight="40" prefWidth="140" styleClass="action-button"/>
+        </HBox>
     </HBox>
 
-    <!-- Tabela -->
     <TableView fx:id="radniciTable"
                VBox.vgrow="ALWAYS"
-               prefHeight="400"
                styleClass="custom-table">
-
         <columns>
-            <TableColumn fx:id="imeCol" text="Ime" prefWidth="100"/>
-            <TableColumn fx:id="prezimeCol" text="Prezime" prefWidth="100"/>
-            <TableColumn fx:id="drzavaCol" text="Država" prefWidth="100"/>
-            <TableColumn fx:id="granaCol" text="Grana rada" prefWidth="130"/>
-            <TableColumn fx:id="statusCol" text="Status" prefWidth="150"/>
-            <TableColumn fx:id="ugovorCol" text="Akcija" prefWidth="130"/>
+            <TableColumn fx:id="imeCol" text="Ime" minWidth="120" />
+            <TableColumn fx:id="prezimeCol" text="Prezime" minWidth="120"/>
+            <TableColumn fx:id="drzavaCol" text="Država" minWidth="120"/>
+            <TableColumn fx:id="granaCol" text="Grana rada" minWidth="150"/>
+            <TableColumn fx:id="statusCol" text="Status" minWidth="100"/>
+            <TableColumn fx:id="ugovorCol" text="Akcija" minWidth="180"/>
         </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
     </TableView>
 
-    <!-- Nazad -->
-    <Button text="⬅ Nazad"
-            onAction="#goBack"
-            styleClass="action-button"/>
+
 </VBox>

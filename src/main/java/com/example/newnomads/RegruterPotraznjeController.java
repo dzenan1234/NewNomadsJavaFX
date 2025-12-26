@@ -2,10 +2,12 @@ package com.example.newnomads;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -35,6 +37,11 @@ public class RegruterPotraznjeController {
         naslovCol.setCellValueFactory(cellData -> cellData.getValue().naslovPotraznjeProperty());
         statusCol.setCellValueFactory(cellData -> cellData.getValue().statusPotraznjeProperty());
         granaCol.setCellValueFactory(data -> data.getValue().granaProperty());
+        idCol.setStyle("-fx-alignment: CENTER;");
+        firmaCol.setStyle("-fx-alignment: CENTER;");
+        naslovCol.setStyle("-fx-alignment: CENTER-LEFT;"); // Naslov obično ide lijevo
+        statusCol.setStyle("-fx-alignment: CENTER;");
+        granaCol.setStyle("-fx-alignment: CENTER;");
 
         dodajDugmeUTableu();
 
@@ -59,12 +66,12 @@ public class RegruterPotraznjeController {
             @Override
             public TableCell<PotraznjaRadnika, Void> call(final TableColumn<PotraznjaRadnika, Void> param) {
                 return new TableCell<>() {
-                    private final Button btn = new Button("Pretraži radnike");
+                    // Koristimo tvoju klasu 'table-button' koju smo definisali u CSS-u
+                    private final Button btn = new Button("Pretraži");
                     {
-                        btn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;");
+                        btn.getStyleClass().add("table-button"); // Ovo vuče stil iz CSS-a
                         btn.setOnAction(event -> {
                             PotraznjaRadnika data = getTableView().getItems().get(getIndex());
-                            // OVDJE JE BIO PROBLEM: Proslijeđena oba parametra
                             otvoriRadnikeSaFilterom(data.getGrana(), data.getIdFirme());
                         });
                     }
@@ -72,7 +79,11 @@ public class RegruterPotraznjeController {
                     public void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) setGraphic(null);
-                        else setGraphic(btn);
+                        else {
+                            setGraphic(btn);
+                            // Centriramo dugme u ćeliji
+                            setStyle("-fx-alignment: CENTER;");
+                        }
                     }
                 };
             }
@@ -104,32 +115,45 @@ public class RegruterPotraznjeController {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // ISPRAVLJENA METODA: Sada prima dva parametra
     private void otvoriRadnikeSaFilterom(String nazivGrane, int idFirme) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/regruter_radnici.fxml"));
-            Scene scene = new Scene(loader.load());
+            Parent root = loader.load();
 
             RegruterRadniciController radniciCtrl = loader.getController();
             radniciCtrl.filtrirajPoGrani(nazivGrane, idFirme);
 
-            Stage stage = (Stage) potraznjeTable.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Matching radnika za granu: " + nazivGrane);
+            // KLJUČ: Tražimo centralni StackPane
+            StackPane cp = (StackPane) potraznjeTable.getScene().lookup("#contentPane");
+            if (cp != null) {
+                cp.getChildren().setAll(root);
+            }
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    @FXML private void goBack() { switchScene("/com/example/newnomads/regruter.fxml", "Dashboard"); }
-    @FXML private void openRadnici() { switchScene("/com/example/newnomads/regruter_radnici.fxml", "Radnici"); }
-    @FXML private void openUgovori() { switchScene("/com/example/newnomads/regruter_ugovori.fxml", "Ugovori"); }
-    @FXML private void logout() { switchScene("/com/example/newnomads/login.fxml", "Login"); }
+    /** ISPRAVLJENO: Sve switchScene metode sada rade unutar contentPane-a **/
+    @FXML private void goBack() { updateContent("/com/example/newnomads/regruter_potraznje.fxml"); }
+    @FXML private void openRadnici() { updateContent("/com/example/newnomads/regruter_radnici.fxml"); }
+    @FXML private void openUgovori() { updateContent("/com/example/newnomads/regruter_ugovori.fxml"); }
 
-    private void switchScene(String fxmlPath, String title) {
+    private void updateContent(String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            StackPane cp = (StackPane) potraznjeTable.getScene().lookup("#contentPane");
+            if (cp != null) {
+                Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+                cp.getChildren().setAll(root);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    @FXML
+    private void logout() {
+        try {
+            // Jedino Logout zapravo treba skroz promijeniti scenu (vratiti na login prozor)
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/newnomads/login.fxml"));
             Stage stage = (Stage) potraznjeTable.getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
-            stage.setTitle(title);
+            stage.getScene().setRoot(root);
+            stage.setTitle("Login");
         } catch (Exception e) { e.printStackTrace(); }
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <StackPane xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -9,31 +9,27 @@
            stylesheets="@../../../css/potraznja.css"
            styleClass="root">
 
-    <VBox spacing="30" alignment="CENTER">
+    <VBox spacing="30" alignment="TOP_CENTER">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
 
-        <!-- Naslov -->
         <Label text="Potražnje firmi" styleClass="title-label"/>
 
-        <!-- Tabela -->
-        <TableView fx:id="potraznjeTable"
-                   prefWidth="800"
-                   prefHeight="300"
-                   styleClass="custom-table">
-
+        <TableView fx:id="potraznjeTable" styleClass="custom-table" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="idCol" text="ID" prefWidth="40"/>
-                <TableColumn fx:id="naslovCol" text="Naslov" prefWidth="150"/>
-                <TableColumn fx:id="granaCol" text="Grana rada" prefWidth="130"/>
-                <TableColumn fx:id="firmaCol" text="Firma" prefWidth="120"/>
-                <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
-                <TableColumn fx:id="akcijaCol" text="Akcija" prefWidth="120"/>
+                <TableColumn fx:id="idCol" text="ID" minWidth="50" maxWidth="70"/>
+                <TableColumn fx:id="naslovCol" text="Naslov" minWidth="200"/>
+                <TableColumn fx:id="granaCol" text="Grana rada" minWidth="150"/>
+                <TableColumn fx:id="firmaCol" text="Firma" minWidth="100"/>
+                <TableColumn fx:id="statusCol" text="Status" minWidth="100"/>
+                <TableColumn fx:id="akcijaCol" text="Akcija" minWidth="150"/>
             </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
         </TableView>
 
-        <!-- Dugme -->
-        <Button text="Nazad"
-                styleClass="action-button"
-                onAction="#goBack"/>
 
     </VBox>
 </StackPane>
