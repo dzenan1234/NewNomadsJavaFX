@@ -1,146 +1,249 @@
-/* ===============================
-   ROOT / CONTAINER
-================================ */
-.vbox-form {
-    -fx-background-color: linear-gradient(to bottom right, #1e293b, #0f172a);
-    -fx-padding: 40;
-    -fx-alignment: center;
-    -fx-spacing: 15;
+/* --- OSNOVNA POZADINA --- */
+.root {
+    -fx-background-color: #0f172a;
+    -fx-font-family: "Segoe UI", sans-serif;
 }
 
-/* ===============================
-   NASLOVI
-================================ */
-.title-label {
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-padding: 0 0 20 0;
-}
-
-/* ===============================
-   SVA INPUT POLJA – OSNOVA
-================================ */
-.text-field,
-.combo-box,
-.date-picker {
-    -fx-pref-width: 400;
-    -fx-max-width: 400;
-    -fx-font-size: 14px;
-
+.form-container {
     -fx-background-color: #1e293b;
-    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-border-color: #334155;
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 20, 0, 0, 10);
+}
+
+/* --- LABELE --- */
+.title-label { -fx-font-size: 32px; -fx-font-weight: 800; -fx-text-fill: #f8fafc; }
+.subtitle-label { -fx-font-size: 14px; -fx-text-fill: #94a3b8; }
+
+/* --- UNIVERZALNI STIL ZA SVA POLJA (KAD SE NE KUCA) --- */
+.form-field, .text-area, .date-picker, .combo-box {
+    -fx-background-color: #334155;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: transparent;
+    -fx-text-fill: #f8fafc;
     -fx-prompt-text-fill: #94a3b8;
-
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-color: #334155;
-    -fx-border-width: 1;
+    -fx-background-insets: 0;
 }
 
-/* Fokus */
-.text-field:focused,
-.combo-box:focused,
-.date-picker:focused {
+/* --- FIX ZA TEXTAREA I TEXTFIELD (DOK SE KUCA) --- */
+.text-input, .text-field, .text-area .content {
+    -fx-background-color: #334155 !important;
+    -fx-text-fill: #f8fafc !important;
+    -fx-prompt-text-fill: #94a3b8 !important;
+    -fx-highlight-fill: #38bdf8;
+    -fx-highlight-text-fill: #0f172a;
+}
+
+/* Kad klikneš (Focus) */
+.form-field:focused, .text-area:focused, .date-picker:focused, .combo-box:focused {
+    -fx-background-color: #1e293b;
     -fx-border-color: #38bdf8;
-    -fx-background-color: #0f172a;
+    -fx-border-width: 2;
 }
 
-/* ===============================
-   TEXTAREA – ISPRAVNO STILIZOVANA
-================================ */
-.text-area {
-    -fx-pref-width: 400;
-    -fx-max-width: 400;
-    -fx-pref-height: 100;
-
-    -fx-font-size: 14px;
-    -fx-text-fill: white;
-
-    -fx-background-color: #0f172a;
-    -fx-background-radius: 8;
-
-    -fx-border-radius: 8;
-    -fx-border-color: #334155;
+/* --- FIX ZA COMBOBOX (GRANA RADA) --- */
+.combo-box { -fx-padding: 2; }
+.combo-box .list-cell {
+    -fx-text-fill: #f8fafc !important;
+    -fx-background-color: transparent !important;
 }
 
-/* UNUTRAŠNJI CONTENT (OBAVEZNO) */
-.text-area .content {
-    -fx-background-color: #0f172a;
-    -fx-text-fill: white;
-}
-
-/* Fokus TextArea */
-.text-area:focused {
+/* Dropdown koji se otvori */
+.combo-box-popup .list-view {
+    -fx-background-color: #1e293b;
     -fx-border-color: #38bdf8;
 }
-
-/* Prompt tekst */
-.text-area .prompt-text {
-    -fx-fill: #94a3b8;
-}
-
-/* ===============================
-   COMBOBOX STYLING
-================================ */
-.combo-box {
-    -fx-pref-height: 38;
-    -fx-text-fill: white;
-}
-
-/* ===============================
-   DATEPICKER STYLING
-================================ */
-.date-picker {
-    -fx-pref-height: 38;
-}
-
-/* Editor DatePicker-a */
-.date-picker .editor {
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: #f8fafc;
     -fx-background-color: #1e293b;
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: #94a3b8;
 }
-
-/* Dugme sa strelicom */
-.date-picker .arrow-button {
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
-    -fx-background-radius: 8;
-}
-
-/* ===============================
-   DUGMAD
-================================ */
-.action-button {
-    -fx-pref-width: 400;
-    -fx-pref-height: 40;
-
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-
+.combo-box-popup .list-view .list-cell:hover {
     -fx-background-color: #38bdf8;
     -fx-text-fill: #0f172a;
+}
 
-    -fx-background-radius: 8;
+/* --- FIX ZA DATEPICKER (KRAJNJI ROK) --- */
+.date-picker > .text-field {
+    -fx-background-color: transparent !important;
+}
+.date-picker > .arrow-button { -fx-background-color: transparent; }
+.date-picker > .arrow-button > .padding > .graphic {
+    -fx-background-color: #38bdf8;
+}
+
+/* Popravka popup kalendara */
+.date-picker-popup { -fx-background-color: #1e293b; -fx-border-color: #334155; }
+.date-picker-popup .month-year-pane { -fx-background-color: #334155; }
+.date-picker-popup .calendar-grid { -fx-background-color: #1e293b; }
+.date-picker-popup .day-cell { -fx-text-fill: white; }
+.date-picker-popup .day-cell:hover { -fx-background-color: #38bdf8; -fx-text-fill: black; }
+
+/* --- DUGMAD --- */
+.action-button {
     -fx-cursor: hand;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 12 30;
+}
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom right, #38bdf8, #0ea5e9);
+    -fx-text-fill: #0f172a;
+}
+.primary-button:hover {
+    -fx-background-color: #7dd3fc;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-border-color: #475569;
+}
+.secondary-button:hover {
+    -fx-border-color: #f8fafc;
+    -fx-text-fill: white;
+}
+/* --- TEXTAREA (OPIS POSLA) BEZ BORDERA I BIJELIH DIJELOVA --- */
+.text-area {
+    -fx-background-color: #334155;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-padding: 0; /* Uklanja unutrašnji padding oko scrollera */
 }
 
-/* Hover */
-.action-button:hover {
-    -fx-background-color: #0ea5e9;
+.text-area .content {
+    -fx-background-color: transparent !important; /* Ovo miče bijelu pozadinu */
+    -fx-padding: 12 16;
 }
 
-/* Klik */
-.action-button:pressed {
-    -fx-background-color: #0284c7;
+.text-area .viewport {
+    -fx-background-color: transparent !important;
 }
 
-/* ===============================
-   PORUKE (ERROR / INFO)
-================================ */
-.error-label {
-    -fx-text-fill: #f87171;
-    -fx-font-size: 13px;
-    -fx-padding: 10 0 0 0;
+/* --- DATEPICKER POPRAVKA (KALENDAR I TEKST) --- */
+.date-picker {
+    -fx-background-color: #334155;
+}
+
+.date-picker > .text-field {
+    -fx-background-color: transparent !important;
+    -fx-text-fill: #f8fafc !important; /* Bijeli tekst datuma */
+}
+
+/* SREĐIVANJE KALENDARA (DA NE BUDE BIJELO NA BIJELOM) */
+.date-picker-popup {
+    -fx-background-color: #1e293b !important;
+    -fx-border-color: #38bdf8 !important;
+}
+
+.date-picker-popup .calendar-header {
+    -fx-background-color: #334155 !important;
+}
+
+.date-picker-popup .calendar-grid {
+    -fx-background-color: #1e293b !important;
+}
+
+/* Dani u mjesecu */
+.date-picker-popup .day-cell {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #f8fafc !important; /* Forsirano bijeli tekst brojeva */
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #38bdf8 !important;
+    -fx-text-fill: #0f172a !important; /* Crni tekst na plavoj pozadini kad je hover */
+}
+
+/* Dani koji nisu u trenutnom mjesecu (izblijedjeli) */
+.date-picker-popup .previous-month, .date-picker-popup .next-month {
+    -fx-text-fill: #475569 !important;
+}
+
+/* Današnji datum */
+.date-picker-popup .today {
+    -fx-text-fill: #38bdf8 !important;
+    -fx-font-weight: bold;
+}
+
+/* --- UKLANJANJE SVIH DEFAULT FOCUS BORDERA --- */
+.form-field:focused, .text-area:focused, .date-picker:focused, .combo-box:focused {
+    -fx-background-insets: 0, 0;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-border-color: #38bdf8;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+}
+
+/* --- PLACEHOLDER KOJI SE VIDI --- */
+.form-field .text {
+    -fx-fill: #f8fafc;
+}
+
+.form-field {
+    -fx-prompt-text-fill: #94a3b8 !important;
+}
+
+/* Osigurava da ComboBox striktno prati visinu ostalih polja */
+.combo-box {
+    -fx-pref-height: 45px;
+}
+
+/* Popravlja poravnanje strelice u DatePicker-u */
+.date-picker > .arrow-button {
+    -fx-padding: 0 15 0 0;
+}
+
+/* Dodatna klasa za labelu koja stoji iznad polja ako zatreba */
+.form-label {
+    -fx-text-fill: #f8fafc;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+/* --- POPRAVKA ZA COMBOBOX POPUP (LISTA) --- */
+.combo-box-popup .list-view {
+    -fx-background-color: #1e293b; /* Tamno plava kao form-container */
+    -fx-border-color: #38bdf8;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 0;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #f8fafc !important; /* Forsirano bijela boja teksta */
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+}
+
+/* Stil kad se mišem pređe preko stavke u listi (Hover) */
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #38bdf8 !important;
+    -fx-text-fill: #0f172a !important; /* Tamni tekst na plavoj pozadini */
+}
+
+/* Stil za trenutno selektovanu stavku u otvorenoj listi */
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: #0ea5e9 !important;
+    -fx-text-fill: #0f172a !important;
+}
+
+/* --- POPRAVKA ZA DATEPICKER POPUP (KALENDAR) --- */
+.date-picker-popup .list-cell {
+    -fx-text-fill: #f8fafc !important;
+}
+
+/* Da se vidi broj godine i mjesec u zaglavlju kalendara */
+.date-picker-popup .calendar-header .label {
+    -fx-text-fill: #f8fafc !important;
+}
+
+/* Dugmad za promjenu mjeseca u kalendaru */
+.date-picker-popup .left-arrow-button, .date-picker-popup .right-arrow-button {
+    -fx-background-color: #38bdf8;
 }

@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox spacing="20"
+<VBox spacing="30" alignment="TOP_CENTER"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.newnomads.RegruterZahtjeviController"
       stylesheets="@../../../css/potraznja.css"
-      styleClass="root"
-      style="-fx-padding: 20;">
+      styleClass="root">
 
-    <!-- Naslov -->
+    <padding>
+        <Insets top="40" right="50" bottom="40" left="50"/>
+    </padding>
+
     <Label text="Zahtjevi firmi na čekanju" styleClass="title-label"/>
 
-    <!-- Tabela -->
     <TableView fx:id="tableZahtjevi"
                VBox.vgrow="ALWAYS"
                styleClass="custom-table">
 
         <columns>
-            <TableColumn fx:id="colFirma" text="Firma" prefWidth="150"/>
-            <TableColumn fx:id="colRadnik" text="Radnik" prefWidth="150"/>
-            <TableColumn fx:id="colOpis" text="Napomena" prefWidth="250"/>
-            <TableColumn fx:id="colAkcija" text="Odobri / Odbij" prefWidth="200"/>
+            <TableColumn fx:id="colFirma" text="Firma" minWidth="150"/>
+            <TableColumn fx:id="colRadnik" text="Radnik" minWidth="150"/>
+
+            <TableColumn fx:id="colOpis" text="Napomena" minWidth="250"/>
+
+            <TableColumn fx:id="colAkcija"  styleClass="action-column" text="Akcije" minWidth="220" maxWidth="300"/>
         </columns>
+
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
     </TableView>
 
-    <!-- Dugme -->
-    <Button text="Nazad"
-            onAction="#goBack"
-            styleClass="action-button"/>
+
 
 </VBox>

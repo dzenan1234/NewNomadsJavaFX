@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -142,24 +143,21 @@ public class RegruterRadniciController {
 
 
 
+    /** KLJUČNA ISPRAVKA: Učitavanje u contentPane umjesto nove scene **/
     private void otvoriProzorZaUgovor(Radnik r) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/newnomads/dodajUgovor.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/newnomads/dodajUgovor.fxml"));
+            Parent root = loader.load();
 
-            Parent root = loader.load(); // 👈 OVO JE BITNO
-
+            // Prenos podataka u DodajUgovorController
             DodajUgovorController ctrl = loader.getController();
             ctrl.setPodaci(r, proslijedjenIdFirme);
 
-            Stage stage = (Stage) radniciTable.getScene().getWindow();
-
-            Scene scene = new Scene(root);
-
-            stage.setScene(scene);
-            StageUtils.setFullScreen(stage);
-
+            // Pronalazimo contentPane iz RegruterController-a
+            StackPane cp = (StackPane) radniciTable.getScene().lookup("#contentPane");
+            if (cp != null) {
+                cp.getChildren().setAll(root); // Ubaci formu u centar
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

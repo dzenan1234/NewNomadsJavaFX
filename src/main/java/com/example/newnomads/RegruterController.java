@@ -89,14 +89,25 @@ public class RegruterController {
         contentPane.getChildren().setAll(content);
     }
 
-    /** Helper za punu promjenu scene */
+    /** Helper za punu promjenu scene (Logout) */
     private void switchScene(ActionEvent event, String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            // 1. Dohvati trenutni prozor (Stage)
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
+
+            // 2. Umjesto nove Scene, samo zamijeni Root postojeće scene
+            stage.getScene().setRoot(root);
+
+            // 3. Forsiraj Full Screen nazad
+            stage.setFullScreen(true);
+
+            // Opcionalno: ukloni "ESC" hint ako te nervira
+            stage.setFullScreenExitHint("");
+
             stage.setTitle(title);
-            stage.show();
         } catch (Exception e) {
             System.err.println("Greška pri učitavanju scene: " + fxmlPath);
             e.printStackTrace();

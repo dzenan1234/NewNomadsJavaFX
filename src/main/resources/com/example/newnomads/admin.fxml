@@ -1,75 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<StackPane xmlns="http://javafx.com/javafx/17"
-           xmlns:fx="http://javafx.com/fxml/1"
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.example.newnomads.AdminController"
-           prefWidth="1000" prefHeight="700"
-           stylesheets="@../../../css/admin.css"
-           styleClass="admin-root">
+           stylesheets="@../../../css/admin.css" styleClass="admin-root">
 
-    <!-- Glavni sadržaj -->
-    <VBox spacing="15" alignment="TOP_CENTER">
-        <!-- Naslov -->
-        <Label text="Admin Panel" styleClass="admin-title"/>
+    <VBox spacing="20" alignment="TOP_CENTER">
+        <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+        <Label text="Admin Dashboard" styleClass="title-label"/>
 
-        <!-- Dugmad -->
-        <HBox spacing="10" alignment="CENTER">
-            <Button text="Radnici" onAction="#showRadnici" styleClass="admin-button"/>
-            <Button text="Firme" onAction="#showFirme" styleClass="admin-button"/>
-            <Button text="Regruteri" onAction="#showRegruteri" styleClass="admin-button"/>
-            <Button text="Dodaj regrutera" onAction="#showAddRegruter" styleClass="admin-button"/>
-            <Button text="Dodaj radnika" onAction="#showAddRadnik" styleClass="admin-button"/>
-            <Button text="Logout" onAction="#logout" styleClass="admin-button"/>
+        <HBox spacing="10" alignment="CENTER" styleClass="filter-pane" style="-fx-padding: 10;">
+            <Button text="Radnici" onAction="#showRadnici" styleClass="action-button" prefWidth="120"/>
+            <Button text="Firme" onAction="#showFirme" styleClass="action-button" prefWidth="120"/>
+            <Button text="Regruteri" onAction="#showRegruteri" styleClass="action-button" prefWidth="120"/>
+            <Separator orientation="VERTICAL" prefHeight="30" />
+            <Button text="+ Regruter" onAction="#showAddRegruter" styleClass="action-button" style="-fx-background-color: #0ea5e9;"/>
+            <Button text="+ Radnik" onAction="#showAddRadnik" styleClass="action-button" style="-fx-background-color: #0ea5e9;"/>
+            <Button text="Odjava" onAction="#logout" styleClass="action-button" style="-fx-background-color: #ef4444; -fx-text-fill: white;"/>
         </HBox>
 
-        <!-- Tabela -->
-        <TableView fx:id="table" prefHeight="500" prefWidth="900" styleClass="admin-table"/>
+        <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="custom-table">
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
     </VBox>
 
-    <!-- Overlay modal -->
-    <StackPane fx:id="overlay" visible="false" managed="false" styleClass="admin-overlay"
-               prefWidth="1000" prefHeight="700" alignment="CENTER">
+    <StackPane fx:id="overlay" visible="false" managed="false" styleClass="admin-overlay">
 
-        <!-- Regruter Box -->
-        <VBox fx:id="addRegruterBox" spacing="10" alignment="TOP_CENTER" visible="false"
-              styleClass="admin-modal" maxWidth="400" maxHeight="300">
-            <TextField fx:id="emailField" promptText="Email" maxWidth="350"/>
-            <PasswordField fx:id="passwordField" promptText="Password" maxWidth="350"/>
-            <TextField fx:id="imeField" promptText="Ime regrutera" maxWidth="350"/>
+        <VBox fx:id="addRegruterBox" spacing="15" alignment="CENTER" visible="false" managed="false"
+              styleClass="admin-modal" maxWidth="400" maxHeight="350">
+            <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+            <Label text="Novi Regruter" styleClass="title-label" style="-fx-font-size: 20;"/>
+            <TextField fx:id="imeField" promptText="Ime" styleClass="form-field"/>
+            <TextField fx:id="emailField" promptText="Email" styleClass="form-field"/>
+            <PasswordField fx:id="passwordField" promptText="Lozinka" styleClass="form-field"/>
             <HBox spacing="10" alignment="CENTER">
-                <Button text="Spremi" onAction="#addRegruter" styleClass="admin-button" maxWidth="150"/>
-                <Button text="Zatvori" onAction="#closeModal" styleClass="admin-button" maxWidth="150"/>
+                <Button text="Spremi" onAction="#addRegruter" styleClass="action-button" prefWidth="120"/>
+                <Button text="Zatvori" onAction="#closeModal" styleClass="secondary-button" prefWidth="100"/>
             </HBox>
-            <Label fx:id="msg"/>
+            <Label fx:id="msg" style="-fx-text-fill: #4ade80;"/>
         </VBox>
 
-        <!-- Radnik Box -->
         <ScrollPane fx:id="addRadnikBox" visible="false" managed="false"
-                    maxWidth="500" maxHeight="600" fitToWidth="true" fitToHeight="true">
-            <content>
-                <VBox spacing="10" alignment="TOP_CENTER" styleClass="admin-modal">
-                    <TextField fx:id="imeRadnikField" promptText="Ime" maxWidth="400"/>
-                    <TextField fx:id="prezimeRadnikField" promptText="Prezime" maxWidth="400"/>
-                    <TextField fx:id="brojPasosaField" promptText="Broj pasoša" maxWidth="400"/>
-                    <ComboBox fx:id="drzavaCombo" promptText="Država" maxWidth="400"/>
-                    <ComboBox fx:id="granaCombo" promptText="Grana rada" maxWidth="400"/>
-                    <ComboBox fx:id="spolCombo" promptText="Spol" maxWidth="400"/>
-                    <DatePicker fx:id="datumRodjenjaPicker" promptText="Datum rođenja" maxWidth="400"/>
-                    <DatePicker fx:id="doKadPasosPicker" promptText="Do kada traje pasoš" maxWidth="400"/>
-                    <DatePicker fx:id="doKadVizaPicker" promptText="Do kada traje viza (opcionalno)" maxWidth="400"/>
-                    <ComboBox fx:id="statusCombo" promptText="Status" maxWidth="400"/>
-                    <HBox spacing="10" alignment="CENTER">
-                        <Button text="Spremi" onAction="#addRadnik" styleClass="admin-button" maxWidth="150"/>
-                        <Button text="Zatvori" onAction="#closeModal" styleClass="admin-button" maxWidth="150"/>
-                    </HBox>
-                    <Label fx:id="msgRadnik"/>
-                </VBox>
-            </content>
+                    maxWidth="600" maxHeight="650" fitToWidth="true"
+                    hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+            <VBox spacing="25" alignment="TOP_CENTER" styleClass="admin-modal">
+                <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+
+                <Label text="👤 Registracija Radnika" styleClass="title-label" style="-fx-font-size: 24;"/>
+
+                <GridPane vgap="15" hgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    <children>
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Ime" style="-fx-text-fill: #94a3b8; -fx-font-size: 11;"/>
+                            <TextField fx:id="imeRadnikField" promptText="Unesite ime" styleClass="form-field"/>
+                        </VBox>
+
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Prezime" style="-fx-text-fill: #94a3b8; -fx-font-size: 11;"/>
+                            <TextField fx:id="prezimeRadnikField" promptText="Unesite prezime" styleClass="form-field"/>
+                        </VBox>
+
+                        <VBox spacing="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                            <Label text="Broj Pasoša" style="-fx-text-fill: #94a3b8; -fx-font-size: 11;"/>
+                            <TextField fx:id="brojPasosaField" promptText="Npr. 12345678" styleClass="form-field"/>
+                        </VBox>
+
+                        <ComboBox fx:id="drzavaCombo" promptText="Odaberi državu" maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="granaCombo" promptText="Grana rada" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <ComboBox fx:id="spolCombo" promptText="Spol" maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="statusCombo" promptText="Status radnika" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                        <DatePicker fx:id="datumRodjenjaPicker" promptText="Datum rođenja" maxWidth="Infinity" GridPane.columnSpan="2" GridPane.rowIndex="4"/>
+                        <DatePicker fx:id="doKadPasosPicker" promptText="Važenje pasoša" maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        <DatePicker fx:id="doKadVizaPicker" promptText="Važenje vize" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                    </children>
+                </GridPane>
+
+                <HBox spacing="15" alignment="CENTER">
+                    <Button text="SAČUVAJ RADNIKA" onAction="#addRadnik" styleClass="action-button" prefWidth="250" style="-fx-font-size: 14;"/>
+                    <Button text="OTKAŽI" onAction="#closeModal" styleClass="secondary-button" prefWidth="120"/>
+                </HBox>
+                <Label fx:id="msgRadnik" style="-fx-text-fill: #4ade80; -fx-font-weight: bold;"/>
+            </VBox>
         </ScrollPane>
-
     </StackPane>
-
 </StackPane>
